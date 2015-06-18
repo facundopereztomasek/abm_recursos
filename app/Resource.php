@@ -16,12 +16,20 @@ class Resource extends Model {
 	*
 	* @var array
 	*/
-	protected $fillable = ['title', 'description', 'url' , 'category_id'];
+	protected $fillable = ['title', 'description', 'url' , 'category_id' , 'image'];
 
 	static public $rules = array(
 		'title' => 'required|min:3|max:50',
 		'description' => 'required|max:140',
 		'url' => 'required|url|max:255',
+		'image' => 'required|max:10000|image',
+	);
+
+	static public $rules_edit = array(
+		'title' => 'required|min:3|max:50',
+		'description' => 'required|max:140',
+		'url' => 'required|url|max:255',
+		'image' => 'max:10000|image',
 	);
 
 	public function category(){

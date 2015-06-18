@@ -19,11 +19,12 @@
 	</head>
 	<body>
 
-		{!! Form::model($resource, array('route' => array('resources.update' , $resource->id ),'method' => 'patch')) !!}
+		{!! Form::model($resource, array('route' => array('resources.update' , $resource->id ),'method' => 'patch', 'files' => true)) !!}
 			{!! Form::text('title') !!}
 			{!! Form::text('description') !!}
 			{!! Form::text('url') !!}
 			{!! Form::select('category_id', $categories ) !!}
+			{!! Form::file('image') !!}
 			{!! Form::submit('Submit!', array('class' => 'name')) !!}
 
 		{!! Form::close() !!}

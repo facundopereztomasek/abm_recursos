@@ -25,9 +25,9 @@
 					<p>{{$resource->title}}</p>
 					<p>{{$resource->description}}<p>
 					<p>{{$resource->url}}<p>
-					<p>{{$resource->image_file}}<p>
 					<p>{{$resource->tags}}<p>
 					<p>{{$resource->category->name}}<p>
+					<div><img src="pictures/{{$resource->image}}" alt="" ></div>
 					{!! link_to_route('resources.edit', $title = 'Editar', $parameters = array( $resource->id ), $attributes = array()) !!}
 					{!! link_to_route('resources.destroy', $title = 'Eliminar', $parameters = array( $resource->id ), $attributes = array()) !!}
 				</li>

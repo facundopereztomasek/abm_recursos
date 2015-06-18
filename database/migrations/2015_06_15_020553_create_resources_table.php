@@ -21,6 +21,7 @@ class CreateResourcesTable extends Migration {
 			$table->string('url');
 			$table->string('image_file' , 60);
 			$table->string('tags' , 100);
+			$table->string('image' , 100);
 			$table->integer('category_id')->unsigned();
 			$table->foreign('category_id')->references('id')->on('categories');
 			$table->timestamps();

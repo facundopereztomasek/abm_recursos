@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 
 class ResourceController extends Controller {
 
@@ -44,8 +45,16 @@ class ResourceController extends Controller {
 		//
 		$inputs = Input::all();
 		$validator = Validator::make($inputs , \App\Resource::$rules);
-		if($validator->passes()){
 
+		if($validator->passes()){
+			$destinationPath = 'pictures/'; // upload path
+			$extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
+			$fileName = rand(11111,99999). '_' . time() . '.'.$extension; // renameing image
+			Image::make(Input::file('image')->getRealPath())->resize(300, null,function($constrain){
+				$constrain->aspectRatio();
+			})->save($destinationPath . $fileName);
+			// Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+			$inputs['image'] = $fileName;
 			\App\Resource::create($inputs);
 			return Redirect::to('/');
 
@@ -95,10 +104,28 @@ class ResourceController extends Controller {
 	public function update($id)
 	{
 		$inputs = Input::all();
-		$validator = Validator::make($inputs , \App\Resource::$rules);
+		$validator = Validator::make($inputs , \App\Resource::$rules_edit);
 		if($validator->passes()){
 
+
 			$resource = \App\Resource::find($id);
+
+			if(isset($inputs['image'])){
+
+				$file = $resource->image;
+
+				unlink('pictures/' . $file);
+
+				$destinationPath = 'pictures/'; // upload path
+				$extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
+				$fileName = rand(11111,99999). '_' . time() . '.'.$extension; // renameing image
+				Image::make(Input::file('image')->getRealPath())->resize(300, null,function($constrain){
+					$constrain->aspectRatio();
+				})->save($destinationPath . $fileName);
+				// Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+				$inputs['image'] = $fileName;
+			}
+
 			$resource->update($inputs);
 			return Redirect::to('/');
 
@@ -119,6 +146,8 @@ class ResourceController extends Controller {
 	public function destroy($id)
 	{
 		//
+		$file = \App\Resource::find($id)->image;
+		unlink('pictures/' . $file);
 		\App\Resource::destroy($id);
 		return Redirect::to('/');
 	}
